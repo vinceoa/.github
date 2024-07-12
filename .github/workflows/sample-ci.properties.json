@@ -1,0 +1,13 @@
+{
+  "name": "Sample Workflow",
+  "description": "Sample CI starter workflow.",
+  "iconName": "example-icon",
+  "categories": [
+      "Node"
+  ],
+  "filePatterns": [
+      "package.json$",
+      "^Dockerfile",
+      ".*\\.md$"
+  ]
+}
