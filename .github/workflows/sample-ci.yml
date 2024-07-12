@@ -1,6 +1,14 @@
 name: Sample CI
 
-on: workflow_call
+on: 
+  workflow_call:
+    inputs:
+      input1:
+        required: false
+        type: string
+      input2:
+        required: false
+        type: string
 
 jobs:
   build:
@@ -11,3 +19,6 @@ jobs:
 
       - name: Run a one-line script
         run: echo Hello from Octo Organization
+
+      - name: Show ENV
+        run: env
