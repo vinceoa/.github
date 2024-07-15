@@ -53,8 +53,10 @@ jobs:
       - image-scan
 
     steps:
-      - name: summary
-        run: echo Code- ${{}}
+      - name: code scan
+        run: echo CodeScan ${{needs.code-scan.result}}
+      - name: image scan
+        run: echo ImageScan ${{needs.image-scan.result}}
 
   
 
