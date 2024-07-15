@@ -9,10 +9,17 @@ on:
       input2:
         required: false
         type: string
+    outputs:
+      dockerImages:
+        description: 'Docker Images available on build host'
+        value: '${{ jobs.build.outputs.output1 }}'
 
 jobs:
   build:
     runs-on: self-hosted
+
+    outputs:
+      output1: ${{steps.docker_images.outcome}}
 
     steps:
       - uses: actions/checkout@v4
@@ -22,3 +29,7 @@ jobs:
 
       - name: Show ENV
         run: env
+
+      - name: docker images
+        id: docker_images
+        run: docker images
