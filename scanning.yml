@@ -1,0 +1,60 @@
+name: scanning
+on:
+  workflow_call:
+
+jobs:
+  code-scan:
+    runs-on: self-hosted
+    outputs:
+      output1: ${{steps.scan.conclusion}}
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+      - name: scan code
+        uses: anchore/scan-action@v4
+        id: scan
+        continue-on-error: false
+        with:
+          path: .
+  
+
+  image-scan:
+    runs-on: self-hosted
+    outputs:
+      output1: ${{steps.scan.conclusion}}
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: build image
+        uses: docker/build-push-action@v6
+        with:
+          context: "{{defaultContext}}"
+          file: build/Dockerfile
+          push: false
+          load: true
+          tags: app:latest
+
+      - name: scan code
+        uses: anchore/scan-action@v4
+        id: scan
+        continue-on-error: false
+        with:
+          image: app:latest
+  scan:
+    runs-on: self-hosted
+    needs:
+      - code-scan
+      - image-scan
+
+    steps:
+      - name: summary
+        run: echo Code- ${{}}
+
+  
+
