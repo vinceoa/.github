@@ -12,14 +12,15 @@ on:
     outputs:
       dockerImages:
         description: 'Docker Images available on build host'
-        value: '${{ jobs.build.outputs.output1 }}'
+        value: '${{ jobs.build.outputs.output1 }}, ${{jobs.build.outputs.output2}}'
 
 jobs:
   build:
     runs-on: self-hosted
 
     outputs:
-      output1: ${{steps.greeting.outputs.message}}
+      output1: ${{steps.show.conclusion}}
+      output2: ${{steps.greeting.outputs.message}}
 
     steps:
       - uses: actions/checkout@v4
@@ -28,7 +29,9 @@ jobs:
         run: echo Hello from Octo Organization
 
       - name: Show ENV
-        run: env
+        id: show
+        run: |
+          env
 
       - id: greeting
-        run: echo "::set-output name=message::Hello, ${{ inputs.input1 }}"
+        run: echo "{name}=Hello, ${{ inputs.input1 }}" >> $GITHUB_OUTPUT
