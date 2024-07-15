@@ -14,11 +14,16 @@ jobs:
       - name: scan code
         uses: anchore/scan-action@v4
         id: scan
-        continue-on-error: false
+        continue-on-error: true
         with:
+          fail-build: true
           path: .
       - name: Inspect report
         run: cat ${{steps.scan.outputs.sarif}}
+      - run: |
+          echo Code Scan Failed
+          exit 1
+        if: ${{steps.scan.outcome == 'failure' }}
   
 
   image-scan:
@@ -45,12 +50,17 @@ jobs:
       - name: scan code
         uses: anchore/scan-action@v4
         id: scan
-        continue-on-error: false
+        continue-on-error: true
         with:
+          fail-build: true
           image: app:latest
           severity-cutoff: critical
       - name: Inspect report
         run: cat ${{steps.scan.outputs.sarif}}
+      - run: |
+          echo Code Scan Failed
+          exit 1
+        if: ${{steps.scan.outcome == 'failure' }}
   scan:
     runs-on: self-hosted
     needs:
