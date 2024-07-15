@@ -19,7 +19,7 @@ jobs:
     runs-on: self-hosted
 
     outputs:
-      output1: ${{steps.docker_images.outcome}}
+      output1: ${{steps.greeting.outputs}}
 
     steps:
       - uses: actions/checkout@v4
@@ -30,6 +30,5 @@ jobs:
       - name: Show ENV
         run: env
 
-      - name: docker images
-        id: docker_images
-        run: docker images
+      - id: greeting
+        run: echo "::set-output name=message::Hello, ${{ inputs.input1 }}"
