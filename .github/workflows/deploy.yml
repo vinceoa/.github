@@ -10,3 +10,8 @@ jobs:
     steps:
       - name: test ansible
         run: ansible-playbook --version
+      - name: fetch playbook definition
+        uses: actions/checkout@v4
+        with:
+          path: playbook
+          repository: vinceoa/playground-playbook
