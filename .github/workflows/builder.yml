@@ -1,0 +1,73 @@
+name: builder
+
+on:
+  workflow_call:
+    inputs:
+      dist-dir:
+        required: false
+        type: string
+        default: dist
+      image-type:
+        description: "web or api"
+        default: web
+        type: string
+        required: false
+
+jobs:
+
+  setup:
+    runs-on: self-hosted
+
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Setup Node.js
+        id: setup-node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - name: Audit
+        id: npm-audit
+        run: npm audit
+
+
+  dependency-audit:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+      - name: scan code
+        uses: anchore/scan-action@v4
+        id: scan
+        continue-on-error: true
+        with:
+          fail-build: true
+          path: .
+      - name: Inspect report
+        run: cat ${{steps.scan.outputs.sarif}}
+      - run: |
+          echo Code Scan Failed
+          exit 1
+        if: ${{steps.scan.outcome == 'failure' }}
+  
+  build-web:
+    runs-on: self-hosted
+    needs:
+      - setup
+      - dependency-audit
+    if: ${{ inputs.image-type == 'web'}}
+
+    steps:
+      - name: hello
+        run: echo hello
+
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: build
+        run: npm run build
