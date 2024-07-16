@@ -15,3 +15,7 @@ jobs:
         with:
           path: playbook
           repository: vinceoa/playground-playbook
+
+      - name: run playbook
+        working-directory: playbook
+        run: ansible-playbook -i inventories/local playbook.yml
