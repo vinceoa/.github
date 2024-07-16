@@ -36,6 +36,8 @@ jobs:
 
   dependency-audit:
     runs-on: self-hosted
+    needs:
+      - setup
     steps:
       - name: Checkout
         id: checkout
