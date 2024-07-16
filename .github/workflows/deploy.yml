@@ -1,0 +1,12 @@
+name: deployer
+
+on:
+  workflow_call:
+
+jobs:
+  setup:
+    runs-on: self-hosted
+    
+    steps:
+      - name: test ansible
+        run: ansible-playbook --version
