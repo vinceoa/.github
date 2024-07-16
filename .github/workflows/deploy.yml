@@ -18,4 +18,4 @@ jobs:
 
       - name: run playbook
         working-directory: playbook
-        run: ansible-playbook -i inventories/local playbook.yml
+        run: ansible-playbook -i inventories/local.yml playbook.yml
